@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  telegram-bot:
+    build: .
+    container_name: telegram-booking-bot
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - SPRING_BOT_USERNAME=${TELEGRAM_BOT_USERNAME}
+      - SPRING_BOT_CREATOR_ID=${TELEGRAM_BOT_CREATOR_ID}
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
