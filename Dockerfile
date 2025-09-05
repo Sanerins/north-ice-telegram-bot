@@ -2,6 +2,8 @@ FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
+RUN mkdir -p /data && chmod 777 /data
+
 # Copy the built jar file (Gradle places it in build/libs/)
 COPY build/libs/*.jar app.jar
 

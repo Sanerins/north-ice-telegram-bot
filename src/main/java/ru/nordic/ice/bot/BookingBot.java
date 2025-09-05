@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.abilitybots.api.bot.BaseAbilityBot;
+import org.telegram.abilitybots.api.db.MapDBContext;
 import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.abilitybots.api.objects.Flag;
 import org.telegram.abilitybots.api.objects.Locality;
@@ -26,8 +27,9 @@ public class BookingBot extends AbilityBot {
 
     protected BookingBot(@Value("${spring.bot.token}") String token,
                          @Value("${spring.bot.username}") String username,
-                         @Value("${spring.bot.creatorId}") long creatorId) {
-        super(token, username);
+                         @Value("${spring.bot.creatorId}") long creatorId,
+                         @Value("${spring.bot.db.data}") String dataPath) {
+        super(token, username, MapDBContext.onlineInstance(dataPath));
         this.creatorId = creatorId;
     }
 
