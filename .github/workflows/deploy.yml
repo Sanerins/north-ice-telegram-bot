@@ -33,6 +33,6 @@ jobs:
           export JAVA_HOME=/root/.sdkman/candidates/java/21.0.6-librca
           export PATH=$JAVA_HOME/bin:$PATH
           
-          docker-compose down
+          docker compose down
           cd /opt/telegram-bot
           ./run.sh
