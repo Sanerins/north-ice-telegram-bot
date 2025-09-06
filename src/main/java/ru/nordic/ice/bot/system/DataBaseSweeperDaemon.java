@@ -30,7 +30,7 @@ public class DataBaseSweeperDaemon {
         this.controlChats = db.getMap(PersistentData.CONTROL_CHATS);
     }
 
-    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(initialDelay = 1, fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     public void sweep() {
         if (!controlChats.containsKey(ControlChatType.SYSTEM.toString())) {
             LOGGER.warn("Can't sweep because system chat is not defined");
