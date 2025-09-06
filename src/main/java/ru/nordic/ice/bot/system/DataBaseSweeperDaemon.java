@@ -21,16 +21,18 @@ public class DataBaseSweeperDaemon {
     private static final Logger LOGGER = LoggerFactory.getLogger(DataBaseSweeperDaemon.class);
 
     private final SenderService senderService;
-    private final DBContext dbContext;
+    private final Map<Long, UserData> userDataMap;
+    private final Map<String, Long> controlChats;
 
     public DataBaseSweeperDaemon(DBContext db, SenderService senderService) {
         this.senderService = senderService;
-        this.dbContext = db;
+        this.userDataMap = db.getMap(PersistentData.CHAT_STATES);
+        this.controlChats = db.getMap(PersistentData.CONTROL_CHATS);
     }
 
     @Scheduled(fixedRate = 5, timeUnit = TimeUnit.MINUTES)
     public void sweep() {
-        if (!dbContext.getMap(PersistentData.CONTROL_CHATS).containsKey(ControlChatType.SYSTEM)) {
+        if (!controlChats.containsKey(ControlChatType.SYSTEM.toString())) {
             LOGGER.warn("Can't sweep because system chat is not defined");
             return;
         }
@@ -39,15 +41,13 @@ public class DataBaseSweeperDaemon {
 
         long now = System.currentTimeMillis();
 
-        Map<Long, UserData> dataMap = dbContext.getMap(PersistentData.CHAT_STATES);
-
         AtomicInteger amount = new AtomicInteger();
 
-        dataMap.forEach((chatId, userData) -> {
+        userDataMap.forEach((chatId, userData) -> {
             if (now - userData.getCreatedAt() < TimeUnit.MINUTES.toMillis(10)) {
                 return;
             }
-            senderService.sendMessage(() -> dataMap.remove(chatId), chatId, BookingMessage.TIMEOUT);
+            senderService.sendMessage(() -> userDataMap.remove(chatId), chatId, BookingMessage.TIMEOUT);
             amount.getAndIncrement();
         });
 

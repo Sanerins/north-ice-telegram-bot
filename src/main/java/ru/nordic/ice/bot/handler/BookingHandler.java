@@ -11,6 +11,7 @@ import ru.nordic.ice.bot.constant.message.ReportMessage;
 import ru.nordic.ice.bot.constant.message.SystemMessage;
 import ru.nordic.ice.bot.dao.UserData;
 import ru.nordic.ice.bot.keyboard.KeyboardFactory;
+import ru.nordic.ice.bot.mapper.UserDataMapper;
 import ru.nordic.ice.bot.service.SenderService;
 
 import java.util.Map;
@@ -37,7 +38,7 @@ public class BookingHandler {
 
     public void finishTheConversation(long chatId) {
         senderService.trySendingControlMessage(() -> userData.remove(chatId),
-                userData.get(chatId).toString(), ControlChatType.REPORT);
+                UserDataMapper.userDataToMessage(userData.get(chatId)), ControlChatType.REPORT);
     }
 
     public void replyToReportHook(long chatId) {
