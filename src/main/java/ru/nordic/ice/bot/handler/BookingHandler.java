@@ -79,7 +79,7 @@ public class BookingHandler {
                         chatId, BookingMessage.PRIVACY_NOTICE, KeyboardFactory.getAgreementKeyboard());
             }
             case PRIVACY_AGREEMENT -> {
-                if (message.getText().equals("Я согласен на обработку данных")) {
+                if (!message.getText().equals("Я согласен на обработку данных")) {
                     senderService.sendMessage(
                             () -> userData.remove(chatId),
                             chatId, BookingMessage.PRIVACY_NOTICE_REJECT, new ReplyKeyboardRemove(true));
