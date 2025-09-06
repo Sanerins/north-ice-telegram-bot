@@ -29,6 +29,14 @@ public class KeyboardFactory {
         );
     }
 
+    public static ReplyKeyboard getAgreementKeyboard() {
+        return new ReplyKeyboardMarkup(
+                List.of(
+                        new KeyboardRow(List.of(new KeyboardButton("Я согласен на обработку данных")))
+                )
+        );
+    }
+
     public static ReplyKeyboard YesNoKeyboard() {
         return new ReplyKeyboardMarkup(
                 List.of(
