@@ -31,4 +31,5 @@ fi
 echo -e "${GREEN}Build successful! Starting Docker containers...${NC}"
 
 # Build and start containers
+docker compose down
 docker compose up --build -d
