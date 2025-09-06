@@ -2,6 +2,8 @@ package ru.nordic.ice.bot.mapper;
 
 import ru.nordic.ice.bot.dao.UserData;
 
+import java.time.Instant;
+
 public class UserDataMapper {
 
     public static String userDataToMessage(UserData userData) {
@@ -19,7 +21,12 @@ public class UserDataMapper {
                 Указанный возраст - %s
                 Телефон - %s
                 Время начала заполнения анкеты (по местоположению сервера!) - %s
-                """.formatted(userData.getName(), type, userData.getAge(), userData.getNumber(), userData.getCreatedAt());
+                """.formatted(
+                        userData.getName(),
+                        type,
+                        userData.getAge(),
+                        userData.getNumber(),
+                        Instant.ofEpochMilli(userData.getCreatedAt()).toString());
     }
 
 }
