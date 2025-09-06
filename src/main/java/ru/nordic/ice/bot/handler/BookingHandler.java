@@ -31,9 +31,11 @@ public class BookingHandler {
     }
 
     public void replyToStart(long chatId) {
+        senderService.sendMessage(chatId, BookingMessage.START, new ReplyKeyboardRemove(true));
+
         senderService.sendMessage(
                 () -> userData.put(chatId, new UserData(chatId, UserData.BookingState.QUESTION_WHO_FOR)),
-                chatId, BookingMessage.START, KeyboardFactory.getSurveyTakerKeyboard());
+                chatId, BookingMessage.QUESTION_FOR_WHOM, KeyboardFactory.getSurveyTakerKeyboard());
     }
 
     public void finishTheConversation(long chatId) {
@@ -54,9 +56,11 @@ public class BookingHandler {
     public void replyToButtons(long chatId, Message message) {
         if (message.getText() == null || message.getText().isEmpty()) {
             sendErrorMessage(chatId);
+            return;
         }
         if (message.getText().equalsIgnoreCase("/start")) {
             replyToStart(chatId);
+            return;
         }
 
         UserData data = userData.get(chatId);
