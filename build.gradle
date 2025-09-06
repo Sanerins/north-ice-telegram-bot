@@ -14,6 +14,15 @@ java {
     }
 }
 
+jar {
+    enabled = false // Disable the regular jar task if using bootJar
+}
+
+bootJar {
+    archiveFileName = 'app.jar' // This forces the output jar to be named app.jar
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 repositories {
     mavenCentral()
 }

@@ -5,7 +5,7 @@ WORKDIR /app
 RUN mkdir -p /data && chmod 777 /data
 
 # Copy the built jar file (Gradle places it in build/libs/)
-COPY build/libs/*.jar app.jar
+COPY build/libs/app.jar app.jar
 
 # Create a non-root user to run the application
 RUN adduser --system --group spring
