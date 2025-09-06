@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  autoheal:
+    restart: always
+    image: willfarrell/autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   telegram-bot:
     build: .
     container_name: telegram-booking-bot
@@ -16,10 +24,11 @@ services:
       - ./logs:/app/logs
       - bot-data:/data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: [ "CMD-SHELL", "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
 volumes:
   bot-data:
