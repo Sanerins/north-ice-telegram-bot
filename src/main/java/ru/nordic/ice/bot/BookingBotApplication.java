@@ -7,11 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.telegram.abilitybots.api.objects.Ability;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
@@ -48,7 +50,7 @@ public class BookingBotApplication {
         }
     }
 
-    @Scheduled(fixedRate = 30, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelay = 30, fixedRate = 30, timeUnit = TimeUnit.SECONDS)
     public void monitorBotSession() {
         if (applicationContext == null) {
             LOG.info("Application context is null - bot doesn't exist yet");
@@ -64,15 +66,15 @@ public class BookingBotApplication {
 
     public synchronized void restartBot(ConfigurableApplicationContext ctx) {
         try {
-            if (botSession != null) {
-                botSession.stop();
-            }
-
+            BotSession oldSession = botSession;
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             BookingBot bot = ctx.getBean("bookingBot", BookingBot.class);
             botSession = botsApi.registerBot(bot);
-            LOG.info("Bot successfully restarted");
-
+            LOG.info("Bot successfully restarted, stopping old session");
+            if (oldSession != null) {
+                oldSession.stop();
+            }
+            LOG.info("Old session stopped");
         } catch (Exception e) {
             LOG.error("Failed to restart bot, will reattempt in 30s", e);
         }

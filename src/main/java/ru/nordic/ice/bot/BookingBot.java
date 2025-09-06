@@ -23,6 +23,7 @@ import java.util.function.BiConsumer;
 public class BookingBot extends AbilityBot {
     private final long creatorId;
 
+    private boolean registered;
     private BookingHandler bookingHandler;
 
     protected BookingBot(@Value("${spring.bot.token}") String token,
@@ -31,6 +32,7 @@ public class BookingBot extends AbilityBot {
                          @Value("${spring.bot.db.data}") String dataPath) {
         super(token, username, MapDBContext.onlineInstance(dataPath));
         this.creatorId = creatorId;
+        this.registered = false;
     }
 
     @Autowired
@@ -79,5 +81,14 @@ public class BookingBot extends AbilityBot {
     public Reply replyToButtons() {
         BiConsumer<BaseAbilityBot, Update> action = (abilityBot, upd) -> bookingHandler.replyToButtons(AbilityUtils.getChatId(upd), upd.getMessage());
         return Reply.of(action, Flag.TEXT, upd -> bookingHandler.userIsActive(AbilityUtils.getChatId(upd)));
+    }
+
+    @Override
+    public void onRegister() {
+        if (registered) {
+            return;
+        }
+        registered = true;
+        super.onRegister();
     }
 }
