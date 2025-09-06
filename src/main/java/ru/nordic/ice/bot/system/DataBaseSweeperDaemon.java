@@ -12,6 +12,8 @@ import ru.nordic.ice.bot.constant.message.SystemMessage;
 import ru.nordic.ice.bot.dao.UserData;
 import ru.nordic.ice.bot.service.SenderService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,19 +43,21 @@ public class DataBaseSweeperDaemon {
 
         long now = System.currentTimeMillis();
 
-        AtomicInteger amount = new AtomicInteger();
-
+        List<UserData> outdated = new ArrayList<>();
         userDataMap.forEach((chatId, userData) -> {
             if (now - userData.getCreatedAt() < TimeUnit.MINUTES.toMillis(10)) {
                 return;
             }
-            senderService.sendMessage(() -> userDataMap.remove(chatId), chatId, BookingMessage.TIMEOUT);
-            amount.getAndIncrement();
+            outdated.add(userData);
         });
 
-        if (amount.get() > 0) {
-            senderService.trySendingControlMessage(SystemMessage.SWEEP_RESULT.formatted(amount.get()), ControlChatType.SYSTEM);
+        if (!outdated.isEmpty()) {
+            senderService.trySendingControlMessage(SystemMessage.SWEEP_RESULT.formatted(outdated.size()), ControlChatType.SYSTEM);
         }
+
+        outdated.forEach(userData -> {
+            senderService.sendMessage(() -> userDataMap.remove(userData.getChatId()), userData.getChatId(), BookingMessage.TIMEOUT);
+        });
     }
 
 }
