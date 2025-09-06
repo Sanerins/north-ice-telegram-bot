@@ -20,7 +20,7 @@ public class BookingHandler {
     private final SenderService senderService;
 
     private final Map<Long, UserData> userData;
-    private final Map<ControlChatType, Long> controlChats;
+    private final Map<String, Long> controlChats;
 
     public BookingHandler(DBContext db, SenderService senderService) {
         this.senderService = senderService;
@@ -41,12 +41,12 @@ public class BookingHandler {
     }
 
     public void replyToReportHook(long chatId) {
-        controlChats.put(ControlChatType.REPORT, chatId);
+        controlChats.put(ControlChatType.REPORT.toString(), chatId);
         senderService.trySendingControlMessage(ReportMessage.INIT, ControlChatType.REPORT);
     }
 
     public void replyToSystemHook(long chatId) {
-        controlChats.put(ControlChatType.SYSTEM, chatId);
+        controlChats.put(ControlChatType.SYSTEM.toString(), chatId);
         senderService.trySendingControlMessage(SystemMessage.INIT, ControlChatType.SYSTEM);
     }
 

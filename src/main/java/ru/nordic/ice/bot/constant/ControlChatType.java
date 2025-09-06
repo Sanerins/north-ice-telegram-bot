@@ -1,5 +1,7 @@
 package ru.nordic.ice.bot.constant;
 
-public enum ControlChatType {
-    SYSTEM, REPORT
+import java.io.Serializable;
+
+public enum ControlChatType implements Serializable {
+    SYSTEM, REPORT;
 }

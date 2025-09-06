@@ -11,17 +11,20 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import ru.nordic.ice.bot.constant.ControlChatType;
 import ru.nordic.ice.bot.constant.PersistentData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Component
 public class SenderService {
     Logger LOGGER = LoggerFactory.getLogger(SenderService.class);
 
     private final MessageSender messageSender;
-    private final DBContext db;
+    private final Map<String, Long> controlChats;
 
     public SenderService(MessageSender messageSender, DBContext db) {
         this.messageSender = messageSender;
-        this.db = db;
+        this.controlChats = db.getMap(PersistentData.CONTROL_CHATS);
     }
 
     public void sendMessage(long chatId, String text) {
@@ -69,7 +72,7 @@ public class SenderService {
 
     public void trySendingControlMessage(Runnable predicate, String message, ControlChatType type) {
         try {
-            Long chatId = (Long) db.getMap(PersistentData.CONTROL_CHATS).get(type);
+            Long chatId = controlChats.get(type.toString());
 
             if (chatId == null) {
                 switch (type) {
