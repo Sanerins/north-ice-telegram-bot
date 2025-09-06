@@ -29,5 +29,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          # Set JAVA_HOME for SDKMAN installation
+          export JAVA_HOME=/root/.sdkman/candidates/java/21.0.6-librca
+          export PATH=$JAVA_HOME/bin:$PATH
+          
           cd /opt/telegram-bot
           ./run.sh
