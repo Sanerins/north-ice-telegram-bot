@@ -1,19 +1,9 @@
 version: '3.8'
 
 services:
-  autoheal:
-    restart: always
-    image: willfarrell/autoheal
-    environment:
-      - AUTOHEAL_CONTAINER_LABEL=all
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   telegram-bot:
     build: .
     container_name: telegram-booking-bot
-    ports:
-      - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
@@ -23,12 +13,6 @@ services:
     volumes:
       - ./logs:/app/logs
       - bot-data:/data
-    healthcheck:
-      test: [ "CMD-SHELL", "curl --fail --silent localhost:8080/actuator/health | grep UP || exit 1" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-      start_period: 5s
 
 volumes:
   bot-data:

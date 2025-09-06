@@ -11,6 +11,4 @@ COPY build/libs/app.jar app.jar
 RUN adduser --system --group spring
 USER spring:spring
 
-EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
