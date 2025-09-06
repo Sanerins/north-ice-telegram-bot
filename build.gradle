@@ -30,7 +30,8 @@ repositories {
 dependencies {
     implementation 'org.telegram:telegrambots-spring-boot-starter:6.9.7.1'
     implementation 'org.telegram:telegrambots-abilities:6.9.7.1'
-    implementation 'org.slf4j:slf4j-simple:2.0.9'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
